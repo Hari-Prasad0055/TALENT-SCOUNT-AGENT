@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Talent Scout</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    :root {
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+      --purple-mid: #6d28d9;
+      --teal: #0f766e;
+      --teal-light: #ccfbf1;
+      --green: #059669;
+      --green-light: #d1fae5;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --amber: #d97706;
+      --amber-light: #fef3c7;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-600: #4b5563;
+      --gray-900: #111827;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--gray-50);
+      color: var(--gray-900);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Hero banner ── */
+    .hero-banner {
+      width: 100%;
+      max-width: 860px;
+      background: #1e1b4b;
+      border-radius: 0 0 28px 28px;
+      padding: 52px 40px 44px;
+      text-align: center;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% -10%, #4c1d9540 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(167, 139, 250, .18);
+      color: #c4b5fd;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(167, 139, 250, .25);
+    }
+
+    .hero-banner h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .hero-banner h1 span {
+      color: #a78bfa;
+    }
+
+    .hero-banner p {
+      color: #a5b4fc;
+      font-size: 0.95rem;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Pill features row ── */
+    .features-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .feat-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, .07);
+      color: #c4b5fd;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(167, 139, 250, .2);
+    }
+
+    .feat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #a78bfa;
+      flex-shrink: 0;
+    }
+
+    /* ── Main content ── */
+    .main {
+      width: 100%;
+      max-width: 860px;
+    }
+
+    /* ── JD Card ── */
+    .jd-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--purple-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .card-header-text h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .card-header-text p {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 1px;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      color: var(--gray-900);
+      font-size: 0.88rem;
+      padding: 14px 16px;
+      resize: vertical;
+      min-height: 160px;
+      outline: none;
+      font-family: inherit;
+      transition: border .15s, box-shadow .15s;
+      line-height: 1.65;
+    }
+
+    textarea:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, .1);
+    }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: all .15s;
+    }
+
+    .btn-primary {
+      background: var(--purple);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--purple-mid);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(124, 58, 237, .35);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btn-primary:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray-600);
+      border: 1.5px solid var(--gray-200);
+    }
+
+    .btn-ghost:hover {
+      background: var(--gray-100);
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .si-purple {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    .si-teal {
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+
+    .si-green {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .stat-body {}
+
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* ── Section header ── */
+    .section-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-hd h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--purple-light);
+      color: #5b21b6;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── Candidate cards ── */
+    .clist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ccard {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow .15s, border-color .15s, transform .15s;
+    }
+
+    .ccard:hover {
+      box-shadow: 0 6px 24px rgba(0, 0, 0, .08);
+      border-color: #c4b5fd;
+      transform: translateY(-1px);
+    }
+
+    .ccard-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      gap: 14px;
+    }
+
+    .rank {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .r1 {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .r2 {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .r3 {
+      background: #fef9ec;
+      color: #78350f;
+    }
+
+    .rn {
+      background: var(--gray-100);
+      color: var(--gray-400);
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--purple-light);
+      color: #5b21b6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .cinfo {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cinfo h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .cinfo p {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+
+    .cright {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .rec {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .rec-strong {
+      background: var(--green-light);
+      color: #065f46;
+    }
+
+    .rec-good {
+      background: var(--purple-light);
+      color: #5b21b6;
+    }
+
+    .rec-consider {
+      background: var(--amber-light);
+      color: #92400e;
+    }
+
+    .rec-pass {
+      background: var(--red-light);
+      color: #991b1b;
+    }
+
+    .chevron {
+      color: var(--gray-200);
+      font-size: 10px;
+      transition: transform .2s;
+    }
+
+    .chevron.open {
+      transform: rotate(180deg);
+    }
+
+    /* ── Score bars ── */
+    .scores-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 4px 20px 16px;
+    }
+
+    .sitem label {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-bottom: 5px;
+      display: block;
+      font-weight: 500;
+    }
+
+    .sitem .sval {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .bar-bg {
+      background: var(--gray-100);
+      border-radius: 99px;
+      height: 5px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width .6s ease;
+    }
+
+    /* ── Detail panel ── */
+    .cdetail {
+      border-top: 1px solid var(--gray-100);
+      padding: 20px;
+      background: var(--gray-50);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .dsec h4 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 10px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .tag-m {
+      background: var(--green-light);
+      color: #065f46;
+    }
+
+    .tag-g {
+      background: var(--red-light);
+      color: #991b1b;
+    }
+
+    .summary {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.65;
+    }
+
+    /* ── Conversation ── */
+    .convo {
+      margin-top: 20px;
+    }
+
+    .convo h4 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 12px;
+    }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .mbubble {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.55;
+      max-width: 78%;
+    }
+
+    .msg-recruiter .mbubble {
+      background: #ede9fe;
+      color: #3b0764;
+    }
+
+    .msg-candidate .mbubble {
+      background: #f0fdf4;
+      color: #14532d;
+      margin-left: auto;
+    }
+
+    .msg-candidate {
+      flex-direction: row-reverse;
+    }
+
+    .rlabel {
+      font-size: 10px;
+      color: var(--gray-400);
+      margin-bottom: 3px;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 18px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-title {
+      color: var(--purple);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0 auto;
+      max-width: 300px;
+      text-align: left;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--gray-400);
+    }
+
+    .step.active {
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    .step.done {
+      color: var(--green);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      flex-shrink: 0;
+    }
+
+    .step.active .dot {
+      background: var(--purple);
+    }
+
+    .step.done .dot {
+      background: var(--green);
+    }
+
+    /* ── Error ── */
+    .err {
+      background: var(--red-light);
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 16px;
+      color: #991b1b;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const SAMPLE_JD = `Senior ML Engineer - AI Product Team
+
+Requirements:
+- 5+ years in machine learning engineering
+- Python, PyTorch or TensorFlow
+- MLOps, Docker, Kubernetes
+- LLMs, RAG systems, prompt engineering
+- AWS or GCP cloud experience
+
+Preferred:
+- Agno/LangChain experience
+- NLP research background
+- Startup experience
+
+Responsibilities:
+- Design and deploy production ML pipelines
+- Build LLM-powered features
+- Mentor junior engineers`;
+
+    const API = "http://localhost:8000";
+
+    function recClass(r = "") {
+      r = r.toLowerCase();
+      if (r.includes("strong")) return "rec-strong";
+      if (r.includes("good")) return "rec-good";
+      if (r.includes("consider")) return "rec-consider";
+      return "rec-pass";
+    }
+    function rankClass(r) { return r === 1 ? "r1" : r === 2 ? "r2" : r === 3 ? "r3" : "rn"; }
+    function scolor(v) { return v >= 80 ? "#059669" : v >= 65 ? "#7c3aed" : v >= 50 ? "#d97706" : "#dc2626"; }
+    function initials(name) { return name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase(); }
+
+    const AVATAR_COLORS = [
+      ["#ede9fe", "#5b21b6"], ["#d1fae5", "#065f46"], ["#dbeafe", "#1e40af"],
+      ["#fce7f3", "#9d174d"], ["#fef3c7", "#92400e"], ["#ccfbf1", "#0f6e56"],
+    ];
+
+    function ScoreBar({ label, value }) {
+      return (
+        <div className="sitem">
+          <label>{label}</label>
+          <div className="sval" style={{ color: scolor(value) }}>{value.toFixed(1)}</div>
+          <div className="bar-bg">
+            <div className="bar-fill" style={{ width: `${value}%`, background: scolor(value) }} />
+          </div>
+        </div>
+      );
+    }
+
+    function CandCard({ c, idx }) {
+      const [open, setOpen] = useState(false);
+      const [bg, fg] = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+      return (
+        <div className="ccard">
+          <div className="ccard-header" onClick={() => setOpen(o => !o)}>
+            <div className={`rank ${rankClass(c.rank)}`}>#{c.rank}</div>
+            <div className="avatar" style={{ background: bg, color: fg }}>{initials(c.name)}</div>
+            <div className="cinfo">
+              <h3>{c.name}</h3>
+              <p>{c.title}</p>
+            </div>
+            <div className="cright">
+              <span className={`rec ${recClass(c.recommendation)}`}>{c.recommendation}</span>
+              <span className={`chevron ${open ? "open" : ""}`}>&#9660;</span>
+            </div>
+          </div>
+
+          <div className="scores-row">
+            <ScoreBar label="Match score" value={c.match_score} />
+            <ScoreBar label="Interest score" value={c.interest_score} />
+            <ScoreBar label="Final score" value={c.final_score} />
+          </div>
+
+          {open && (
+            <div className="cdetail">
+              <div className="detail-grid">
+                <div>
+                  <div className="dsec">
+                    <h4>Match reasons</h4>
+                    <div className="tags">{(c.match_reasons || []).map((r, i) => <span key={i} className="tag tag-m">{r}</span>)}</div>
+                  </div>
+                  <div className="dsec" style={{ marginTop: 14 }}>
+                    <h4>Gaps</h4>
+                    <div className="tags">{(c.gaps || []).map((g, i) => <span key={i} className="tag tag-g">{g}</span>)}</div>
+                  </div>
+                </div>
+                <div className="dsec">
+                  <h4>Engagement summary</h4>
+                  <div className="summary">{c.conversation_summary}</div>
+                </div>
+              </div>
+              {c.conversation && c.conversation.length > 0 && (
+                <div className="convo">
+                  <h4>Simulated conversation</h4>
+                  {c.conversation.map((m, i) => (
+                    <div key={i} className={`msg msg-${m.role}`}>
+                      <div>
+                        <div className="rlabel">{m.role === "recruiter" ? "Recruiter" : "Candidate"}</div>
+                        <div className="mbubble">{m.message}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const STEPS = [
+      "Parsing job description...",
+      "Loading candidates from MongoDB...",
+      "Matching and scoring candidates...",
+      "Simulating outreach conversations...",
+      "Generating ranked shortlist...",
+    ];
+
+    function LoadingView({ step }) {
+      return (
+        <div className="loading">
+          <div className="spinner" />
+          <div className="loading-title">Agent is working...</div>
+          <div className="steps">
+            {STEPS.map((s, i) => (
+              <div key={i} className={`step ${i < step ? "done" : i === step ? "active" : ""}`}>
+                <div className="dot" /><span>{s}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [jd, setJd] = useState(SAMPLE_JD);
+      const [loading, setLoading] = useState(false);
+      const [step, setStep] = useState(0);
+      const [result, setResult] = useState(null);
+      const [error, setError] = useState("");
+
+      async function run() {
+        setLoading(true); setResult(null); setError(""); setStep(0);
+        const t = setInterval(() => setStep(s => s < STEPS.length - 1 ? s + 1 : s), 4000);
+        try {
+          const res = await fetch(`${API}/api/scout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ job_description: jd }),
+          });
+          if (!res.ok) { const e = await res.json(); throw new Error(e.detail || "Server error"); }
+          setResult(await res.json());
+        } catch (e) { setError(e.message); }
+        finally { clearInterval(t); setLoading(false); }
+      }
+
+      const strongHires = result?.shortlist?.filter(c => c.recommendation === "Strong hire").length || 0;
+
+      return (
+        <div className="page">
+          <div className="hero-banner">
+            <div className="hero-eyebrow">
+              <span className="feat-dot" style={{ background: "#a78bfa" }}></span>
+              AI-Powered Recruiting
+            </div>
+            <h1>Talent Scout <span>Agent</span></h1>
+            <p>Paste a job description — the agent finds, scores, and engages the best candidates automatically.</p>
+            <div className="features-row">
+              <div className="feat-pill"><span className="feat-dot"></span>JD Parsing</div>
+              <div className="feat-pill"><span className="feat-dot"></span>Candidate Matching</div>
+              <div className="feat-pill"><span className="feat-dot"></span>Simulated Outreach</div>
+              <div className="feat-pill"><span className="feat-dot"></span>Ranked Shortlist</div>
+            </div>
+          </div>
+
+          <div className="main">
+            <div className="jd-card">
+              <div className="card-header">
+                <div className="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <line x1="8" y1="8" x2="16" y2="8" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                    <line x1="8" y1="16" x2="12" y2="16" />
+                  </svg>
+                </div>
+                <div className="card-header-text">
+                  <h2>Job description</h2>
+                  <p>Paste the full JD to begin scouting</p>
+                </div>
+              </div>
+              <textarea value={jd} onChange={e => setJd(e.target.value)} placeholder="Paste your JD here..." />
+              <div className="btn-row">
+                <button className="btn btn-primary" onClick={run} disabled={loading || !jd.trim()}>
+                  {loading ? "Running agent..." : "Run talent scout"}
+                </button>
+                {!loading && (
+                  <button className="btn btn-ghost" onClick={() => { setJd(""); setResult(null); setError(""); }}>
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {loading && <LoadingView step={step} />}
+            {error && <div className="err">{error}</div>}
+
+            {result && !loading && (
+              <>
+                <div className="stats">
+                  <div className="stat">
+                    <div className="stat-icon si-purple">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                      </svg>
+                    </div>
+                    <div className="stat-body">
+                      <div className="stat-num">{result.total_candidates_evaluated}</div>
+                      <div className="stat-label">Candidates evaluated</div>
+                    </div>
+                  </div>
+                  <div className="stat">
+                    <div className="stat-icon si-teal">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </div>
+                    <div className="stat-body">
+                      <div className="stat-num">{result.candidates_contacted}</div>
+                      <div className="stat-label">Outreach simulated</div>
+                    </div>
+                  </div>
+                  <div className="stat">
+                    <div className="stat-icon si-green">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <div className="stat-body">
+                      <div className="stat-num">{strongHires}</div>
+                      <div className="stat-label">Strong hires found</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="section-hd">
+                  <h2>Ranked shortlist</h2>
+                  <span className="pill">{result.parsed_jd?.title}</span>
+                </div>
+                <div className="clist">
+                  {result.shortlist.map((c, i) => <CandCard key={c.rank} c={c} idx={i} />)}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+
+</html>
