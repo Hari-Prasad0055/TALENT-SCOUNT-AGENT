@@ -15,9 +15,11 @@ from Agents import run_talent_scouting_agent
 
 app = FastAPI(title="Talent Scouting API")
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
